@@ -21,3 +21,11 @@ std::string Eleve::getName(){
 void Eleve::setName(std::string nom){
     this->name = nom;
 };
+
+std::vector<std::string> Eleve::getUE(){
+    return this->ue;
+};
+
+void Eleve::setUE(std::vector<std::string> newUE){
+    this->ue = newUE;
+};
