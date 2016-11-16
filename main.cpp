@@ -4,12 +4,28 @@
 
 #include "Eleve.h"
 
-int main()
-{
+// Variables
+std::vector<Eleve> promo; //Tous les élèves
+
+void displayPromo(){
+    std::vector<std::string> listUE;
+
+    for (int j = 0; j < promo.size(); j++){
+        // Affiche nom
+        std::cout << promo[j].getName() << std::endl;
+        // Affiche UE
+        listUE = promo[j].getUE(); // Var = éco de var
+        for (std::vector<std::string>::const_iterator i = listUE.begin(); i != listUE.end(); ++i)
+            std::cout << *i << ' ';
+        std::cout << std::endl << std::endl; // Retour à la ligne après la liste
+    }
+}
+
+void fillPromo(){
     // Variables
+    Eleve student; // Un élève
     std::string eleveName, nomUE;
     std::vector<std::string> listUE;
-    Eleve student1;
     char ch;
     bool lectureUE = false;
 
@@ -28,15 +44,15 @@ int main()
                 //Création du nouvel élève
                     // new Eleve unique
                 // Met le nom
-                student1.setName(eleveName);
+                student.setName(eleveName);
                 // Met la liste des UE
-                student1.setUE(listUE);
+                student.setUE(listUE);
 
-                //Nettoyage variables
+                //Rajoute l'élève à la promotion
+                promo.push_back(student);
+
+                //Nettoyage des variables
                 nomUE = eleveName = ""; listUE.clear();
-                std::cout << "Clear !" << std::endl;
-
-               // student1.setUE()
                 break;
 
             default:
@@ -60,14 +76,13 @@ int main()
             }
         }
     }
+}
 
-    // Affiche nom
-	std::cout << student1.getName() << std::endl;
-	// Affiche UE
-	listUE = student1.getUE(); // Var = éco de var
-    for (std::vector<std::string>::const_iterator i = listUE.begin(); i != listUE.end(); ++i)
-        std::cout << *i << ' ';
-	std::cout << std::endl; // Retour à la ligne après la liste
+int main(){
+
+    //  Remplir la promo
+    fillPromo();
+    displayPromo();
 
 	return 0; // Bisouxx
 }
