@@ -2,11 +2,7 @@
 #include "Eleve.h"
 
 Eleve::Eleve(){
-    // Bisous
-}
-
-Eleve::Eleve(std::string nom){
-    this->name = nom;
+    // Bisouxx
 }
 
 Eleve::~Eleve()

@@ -2,20 +2,22 @@
 #define ELEVE_H
 
 #include <string>
+#include <vector>
 
 class Eleve
 {
     public:
         Eleve();
-        Eleve(std::string nom);
         virtual ~Eleve();
 
         std::string getName();
         void setName(std::string nom);
+        std::vector<std::string> getUE();
+        void setUE(std::vector<std::string> newUE);
 
     protected:
         std::string name;
-        std::string **ue;
+        std::vector<std::string> ue;
 };
 
 #endif // ELEVE_H
