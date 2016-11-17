@@ -2,8 +2,8 @@
 #include <fstream>
 #include <vector>
 
-#include "Eleve.h"
-#include "UE.h"
+#include "eleve.h"
+#include "ue.h"
 
 // Variables
 std::vector<Eleve> promo; //Tous les élèves
