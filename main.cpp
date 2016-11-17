@@ -6,8 +6,8 @@
 #include "UE.h"
 
 // Variables
-std::vector<Eleve> promo; //Tous les élèves
-std::vector<UE> course; //Tous les élèves
+std::vector<Eleve> promo; //Tous les Ã©lÃ¨ves
+std::vector<UE> course; //Tous les Ã©lÃ¨ves
 
 /*  +---------------------------+
     |                           |
@@ -17,11 +17,12 @@ std::vector<UE> course; //Tous les élèves
 
 void fillPromo(){
     // Variables
-    Eleve student; // Un élève
+    Eleve student; // Un Ã©lÃ¨ve
     std::string eleveName, nomUE;
-    std::vector<std::string> listUE;
+    std::vector<UE*> listUE;
     char ch;
     bool lectureUE = false;
+    UE* adressUE;
 
     //Lecture fichier students.txt
     std::fstream fin("data/students.txt", std::fstream::in);
@@ -40,7 +41,8 @@ void fillPromo(){
                 // Met la liste des UE
                 student.setUE(listUE);
 
-                //Rajoute l'élève à la promotion
+
+                //Rajoute l'Ã©lÃ¨ve Ã  la promotion
                 promo.push_back(student);
 
                 //Nettoyage des variables
@@ -52,16 +54,33 @@ void fillPromo(){
                 break;
         }
 
-        // Enregistrement données pré-création Eleve
-        if(lectureUE == false && ch >= 'a'){ // Lecture d'un nom d'élève (">=a" permet d'éviter les espaces, \n, etc..)
+        // Enregistrement donnÃ©es prÃ©-crÃ©ation Eleve
+        if(lectureUE == false && ch >= 'a'){ // Lecture d'un nom d'Ã©lÃ¨ve (">=a" permet d'Ã©viter les espaces, \n, etc..)
             eleveName += ch;
         }else{
-            if(lectureUE){ //On est dans les UE (risque si ch != [a-z] mais UE == false)
-                if(ch >= 'a'){ //Garde les lettres
+            if(lectureUE){ // On est dans les UE (risque si ch != [a-z] mais UE == false)
+                if(ch >= 'a'){ // Garde les lettres
                     nomUE += ch;
                 }else{
                     if(nomUE != ""){
-                        listUE.push_back(nomUE);    //Met le nom dans le vecteur
+                        int i;
+                        for(i = 0; i < sizeof(course); i++){
+                            if(nomUE == course[i].getName()){
+                                adressUE = &course[i];
+                                break;
+                            }
+                        }
+                        if( i == sizeof(course) ){
+                            exit(1);
+                        }
+                        bool next=false;
+                        for(UE *ue:listUE){
+                            if(ue->getName()==adressUE->getName()){
+                                next=true;
+                            }
+                        }
+                        if(!next)
+                            listUE.push_back(adressUE);    //Met le nom dans le vecteur
                         nomUE = "";                 //Clear variable
                     }
                 }
@@ -71,16 +90,18 @@ void fillPromo(){
 }
 
 void displayPromo(){
-    std::vector<std::string> listUE;
+    std::vector<UE*> listUE;
 
     for (int j = 0; j < promo.size(); j++){
         // Affiche nom
         std::cout << promo[j].getName() << std::endl;
         // Affiche UE
-        listUE = promo[j].getUE(); // Var = éco de var
-        for (std::vector<std::string>::const_iterator i = listUE.begin(); i != listUE.end(); ++i)
-            std::cout << *i << ' ';
-        std::cout << std::endl << std::endl; // Retour à la ligne après la liste
+        listUE = promo[j].getUE(); // Var = Ã©co de var
+
+        for(int i = 0; i < listUE.size(); i++){
+            std::cout << listUE[i]->getName() << ' ';
+        }
+        std::cout << std::endl << std::endl; // Retour Ã  la ligne aprÃ¨s la liste
     }
 }
 
@@ -115,7 +136,7 @@ void fillCourse(){
                 ue.setName(ueName);
                 ue.setTimeTable(listCourse);
 
-                //Rajoute la matière au programme
+                //Rajoute la matiÃ¨re au programme
                 course.push_back(ue);
 
                 //Nettoyage des variables
@@ -128,8 +149,8 @@ void fillCourse(){
                 break;
         }
 
-        // Enregistrement données pré-création Eleve
-        if(lectureDate == false && ch >= 'a'){ // Lecture d'un nom d'élève (">=a" permet d'éviter les espaces, \n, etc..)
+        // Enregistrement donnÃ©es prÃ©-crÃ©ation Eleve
+        if(lectureDate == false && ch >= 'a'){ // Lecture d'un nom d'Ã©lÃ¨ve (">=a" permet d'Ã©viter les espaces, \n, etc..)
             ueName += ch;
         }else{
             if(lectureDate){ //On est dans les horaires (risque si ch != [a-z] mais Date == false)
@@ -153,13 +174,38 @@ void displayCourse(){
         // Affiche nom
         std::cout << course[j].getName() << std::endl;
         // Affiche horaires
-        listCourses = course[j].getTimeTable(); // Var = éco de var
+        listCourses = course[j].getTimeTable(); // Var = Ã©co de var
         for (std::vector<date>::const_iterator i = listCourses.begin(); i != listCourses.end(); ++i)
-            std::cout << "[Jour : " << i->day << " / dbt: " << i->hourStart << " / fin: " << i->hourEnd << ']' << std::endl; // Affiche détails
-        std::cout << std::endl; // Retour à la ligne après la liste
+            std::cout << "[Jour : " << i->day << " / dbt: " << i->hourStart << " / fin: " << i->hourEnd << ']' << std::endl; // Affiche dÃ©tails
+        std::cout << std::endl; // Retour Ã  la ligne aprÃ¨s la liste
     }
 }
 
+void verificationConflicts(){
+    for(Eleve e: promo){    // Parcours la promotion
+        bool conflict = false;
+        std::cout<<"Problems for "<<e.getName()<<':'<<std::endl;
+        for(int i=0; i < e.getUE().size(); i++){    // Parcours tous les UEs de l'Ã©lÃ¨ve
+            for(int j=i+1; j < e.getUE().size(); j++){  // Parcours tous les UEs aprÃ¨s le courant
+                for(date d: e.getUE()[i]->getTimeTable()){  //  Parcours chaque horaire de l'UE courant
+                    for(date dComp: e.getUE()[j]->getTimeTable()){  //  Parcours chaque horaire de l'UE de comparaison
+                        if(((d.hourStart <= dComp.hourStart && d.hourEnd >= dComp.hourStart ) || (d.hourStart <= dComp.hourEnd && d.hourEnd >= dComp.hourEnd)) && (d.day == dComp.day)){
+                            conflict = true;
+                            std::cout<<"-> "<<e.getUE()[i]->getName()<<" day: "<<d.day<<" start: "<<d.hourStart<<" end: "<<d.hourEnd<<std::endl;
+                            std::cout<<"conflicts with"<<std::endl;
+                            std::cout<<"-> "<<e.getUE()[j]->getName()<<" day: "<<dComp.day<<" start: "<<dComp.hourStart<<" end: "<<dComp.hourEnd<<std::endl;
+                        }
+                    }
+                }
+            }
+        }
+        // Affiche "ok" s'il n'y a pas d'erreurs
+        if(!conflict){
+            std::cout<<"OK"<<std::endl;
+        }
+        std::cout<<std::endl;
+    }
+}
 
 /*  +-------------------+
     |                   |
@@ -169,13 +215,15 @@ void displayCourse(){
 
 int main(){
 
+    //  Remplir le programme
+    fillCourse();
+//    displayCourse();    //  Affiche tous les cours avec leurs horaires
+
     //  Remplir la promo
     fillPromo();
-    displayPromo();
+//    displayPromo();    //  Affiche tous les Ã©lÃ¨ves avec leurs UEs
 
-    fillCourse();
-    displayCourse();
-
-	return 0; // Bisouxx
+    verificationConflicts();
+    return 0; // Fin
 }
 
