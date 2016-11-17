@@ -1,0 +1,5 @@
+physics [ MO@9-11 TH@13-15 ]
+math [ TU@10-12 TH@14-16 ]
+biology [ FR@8-10 ]
+french [ WE@15-17 FR@9-10 ]
+english [ WE@16-18 ]
