@@ -1,3 +1,4 @@
+#include <iostream>
 #include "UE.h"
 
 UE::UE()
@@ -58,8 +59,20 @@ date strtodate(std::string stringBrut){
 
     }
 
-    newDate.hourEnd = std::stoi(hourEnd);
-    newDate.hourStart = std::stoi(hourStart);
+    if(std::stoi(hourStart) < std::stoi(hourEnd)){
+        if( std::stoi(hourStart) <= 19 && std::stoi(hourStart) >= 8)
+            newDate.hourStart = std::stoi(hourStart);
+        else
+            std::cout << "Error hours Start" << std::endl;
+
+        if( std::stoi(hourEnd) <= 19 && std::stoi(hourEnd) >= 8)
+            newDate.hourEnd = std::stoi(hourEnd);
+        else
+            std::cout << "Error hours End" << std::endl;
+    }else{
+        std::cout << "Error hours order" << std::endl;
+    }
+
     return(newDate);
 
 };

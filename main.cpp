@@ -189,7 +189,7 @@ void verificationConflicts(){
             for(int j=i+1; j < e.getUE().size(); j++){  // Parcours tous les UEs après le courant
                 for(date d: e.getUE()[i]->getTimeTable()){  //  Parcours chaque horaire de l'UE courant
                     for(date dComp: e.getUE()[j]->getTimeTable()){  //  Parcours chaque horaire de l'UE de comparaison
-                        if(((d.hourStart <= dComp.hourStart && d.hourEnd >= dComp.hourStart ) || (d.hourStart <= dComp.hourEnd && d.hourEnd >= dComp.hourEnd)) && (d.day == dComp.day)){
+                        if(((d.hourStart >= dComp.hourStart && d.hourEnd <= dComp.hourEnd) || (d.hourStart <= dComp.hourStart && d.hourEnd >= dComp.hourStart ) || (d.hourStart <= dComp.hourEnd && d.hourEnd >= dComp.hourEnd)) && (d.day == dComp.day)){
                             conflict = true;
                             std::cout<<"-> "<<e.getUE()[i]->getName()<<" day: "<<d.day<<" start: "<<d.hourStart<<" end: "<<d.hourEnd<<std::endl;
                             std::cout<<"conflicts with"<<std::endl;
