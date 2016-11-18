@@ -181,6 +181,7 @@ void displayCourse(){
     }
 }
 
+// Analyse des conflits des cours de chaque étudiant
 void verificationConflicts(){
     for(Eleve e: promo){    // Parcours la promotion
         bool conflict = false;
@@ -189,8 +190,10 @@ void verificationConflicts(){
             for(int j=i+1; j < e.getUE().size(); j++){  // Parcours tous les UEs après le courant
                 for(date d: e.getUE()[i]->getTimeTable()){  //  Parcours chaque horaire de l'UE courant
                     for(date dComp: e.getUE()[j]->getTimeTable()){  //  Parcours chaque horaire de l'UE de comparaison
+                        // Si les cours sont le même jour, que le début ou la fin du cours comparé est entre le début ou la fin du premier cours, ou que le cours est pendant le cours comparé, alors : 
                         if(((d.hourStart >= dComp.hourStart && d.hourEnd <= dComp.hourEnd) || (d.hourStart <= dComp.hourStart && d.hourEnd >= dComp.hourStart ) || (d.hourStart <= dComp.hourEnd && d.hourEnd >= dComp.hourEnd)) && (d.day == dComp.day)){
-                            conflict = true;
+                            conflict = true; // Si il y a conflit, n'affichera pas 'OK' 
+                            // Affichage conforme au sujet
                             std::cout<<"-> "<<e.getUE()[i]->getName()<<" day: "<<d.day<<" start: "<<d.hourStart<<" end: "<<d.hourEnd<<std::endl;
                             std::cout<<"conflicts with"<<std::endl;
                             std::cout<<"-> "<<e.getUE()[j]->getName()<<" day: "<<dComp.day<<" start: "<<dComp.hourStart<<" end: "<<dComp.hourEnd<<std::endl;
