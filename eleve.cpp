@@ -1,7 +1,7 @@
 #include <string>
 
-#include "Eleve.h"
-#include "UE.h"
+#include "eleve.h"
+#include "ue.h"
 
 Eleve::Eleve(){
     //ctor
